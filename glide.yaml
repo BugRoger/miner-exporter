@@ -1,0 +1,4 @@
+package: github.com/bugroger/claymore-dual-miner-exporter
+import:
+- package: github.com/prometheus/client_golang
+- package: github.com/prometheus/common/model
