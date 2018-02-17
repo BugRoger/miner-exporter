@@ -1,5 +1,5 @@
-hash: ba3c8751b8a292849a8107c458bd9924650a2833a97de8b650cb955ecf53746c
-updated: 2017-07-06T23:35:11.522954427+02:00
+hash: a90d8e9cc1b87705d7a63ece634fea46d021ad295b72d018d3c7c9b9a3226b00
+updated: 2018-02-11T17:19:48.659661+01:00
 imports:
 - name: github.com/beorn7/perks
   version: 4c0e84591b9aa9e6dcfdf3e020114cd81f89d5f9
@@ -32,4 +32,16 @@ imports:
   version: e645f4e5aaa8506fc71d6edbc5c4ff02c04c46f2
   subpackages:
   - xfs
-testImports: []
+- name: github.com/stretchr/testify
+  version: 12b6f73e6084dad08a7c6e575284b177ecafbc71
+  subpackages:
+  - assert
+testImports:
+- name: github.com/davecgh/go-spew
+  version: 782f4967f2dc4564575ca782fe2d04090b5faca8
+  subpackages:
+  - spew
+- name: github.com/pmezard/go-difflib
+  version: 792786c7400a136282c1664665ae0a8db921c6c2
+  subpackages:
+  - difflib

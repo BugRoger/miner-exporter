@@ -17,7 +17,7 @@ GOFILES  := $(wildcard $(GOFILES))
 all: $(BINARIES:%=bin/$(GOOS)/%)
 
 bin/%: $(GOFILES) Makefile
-	GOOS=$(*D) GOARCH=amd64 go build $(GOFLAGS) -v -i -o $(@D)/$(@F) main.go claymore_dual_miner.go
+	GOOS=$(*D) GOARCH=amd64 go build $(GOFLAGS) -v -i -o $(@D)/$(@F) . 
 
 build: $(BINARIES:%=bin/linux/%)
 	docker build $(BUILD_ARGS) -t $(IMAGE):$(VERSION) .

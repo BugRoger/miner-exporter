@@ -17,6 +17,10 @@ func NewClaymoreDualMinerClient(network string, address string) *ClaymoreDualMin
 	return &ClaymoreDualMinerClient{network, address}
 }
 
+func (c *ClaymoreDualMinerClient) Name() string {
+	return "ClaymoreDualMiner"
+}
+
 func (m *ClaymoreDualMinerClient) Collect() (*Metrics, error) {
 	client, err := m.client()
 	if err != nil {
@@ -41,36 +45,41 @@ func (m *ClaymoreDualMinerClient) client() (*rpc.Client, error) {
 }
 
 func (m *ClaymoreDualMinerClient) parse(reply []string) *Metrics {
-	d := &Metrics{
-		Name: "ClaymoreDualMiner",
-	}
-
+	version := reply[0]
+	uptime := parseGarble(reply[1])[0] * 60
 	eth := parseGarble(reply[2])
-	alt := parseGarble(reply[4])
-
 	ethRates := parseGarble(reply[3])
+	alt := parseGarble(reply[4])
 	altRates := parseGarble(reply[5])
 
-	d.Version = reply[0]
-	d.Uptime = parseGarble(reply[1])[0] * 60
-	d.Temps, d.Fans = parseZippedGarble(reply[6])
-	d.Pools = strings.Split(reply[7], ";")
-	d.Stats = append(d.Stats, Stats{
-		Coin:      "ETH",
-		TotalRate: eth[0],
-		Accepted:  eth[1],
-		Rejected:  eth[2],
-		GPURates:  ethRates,
-	})
-	d.Stats = append(d.Stats, Stats{
-		Coin:      "DCR",
-		TotalRate: alt[0],
-		Accepted:  alt[1],
-		Rejected:  alt[2],
-		GPURates:  altRates,
-	})
-
-	return d
+	return &Metrics{
+		Version: version,
+		Uptime:  uptime,
+		Algorithms: []Algorithm{
+			Algorithm{
+				Name: "daggerhashimoto",
+				Shares: Shares{
+					Accepted: eth[1],
+					Rejected: eth[2],
+				},
+				Rates: Rates{
+					Total: eth[0],
+					ByGPU: ethRates,
+				},
+			},
+			Algorithm{
+				Name: "decred",
+				Shares: Shares{
+					Accepted: alt[1],
+					Rejected: alt[2],
+				},
+				Rates: Rates{
+					Total: alt[0],
+					ByGPU: altRates,
+				},
+			},
+		},
+	}
 }
 
 func unzip(i []string) ([]string, []string) {
